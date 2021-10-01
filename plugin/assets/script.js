@@ -1,50 +1,88 @@
-
-
 document.addEventListener("DOMContentLoaded", function (event) {
-  const nodes = document.querySelectorAll(".sc_zweigold_eventlist");
-
-  nodes.forEach((node) => {
-    const json = data();
-    console.log(node);
-    node.innerHTML= "TEST";
+  const lists = document.querySelectorAll(".sc_zweigold_eventlist");
+  lists.forEach((node) => {
+    loadData(node);
   });
 });
 
-
-const data = () => {
-
-}
-
-const buildList = () => {
-
-}
-
-const template = () => {
-
-}
-
-
-
-var myHeaders = new Headers();
-myHeaders.append("Authorization", "Basic dXNlcjpUOVM1R2xxeXhwQzVncTA4dU54OU55R1J6RDI=");
-
-var requestOptions = {
-  method: "GET",
-  headers: myHeaders,
-  redirect: "follow",
+/* load Data */
+const loadData = (node) => {
+  fetch(node.dataset.url, {
+    method: "GET",
+    headers: { Authorization: "Basic " + btoa(node.dataset.user + ":" + node.dataset.pass) },
+    redirect: "follow",
+  })
+    .then((response) => response.json())
+    .then((json) => buildList(json, node));
 };
 
-fetch("https://www.agentur-zweigold.de/api/integrations/termins/89ed7519-5040-4a0a-8537-cece93403ce5", requestOptions)
-  // .then((response) => {
-	// 	response.text();
-	// 	console.log(response);
-	// 	throw response;
-	// })
-	.then(response => response.json())
-	.then(result => init(result))
-  .catch((error) => console.warn(error));
+/* build event list */
+const buildList = (json, node) => {
+  let eventList = "";
+  let schemaList = "";
+  json.forEach(event => {
+    eventList += templateEvent(event) + templateSchema(event);
+  });
+  node.innerHTML = eventList + schemaList;
+};
 
+/* Templates */
 
-const init = (data) => {
-	console.log(data[0].artistName);
-}
+const templateEvent = (event) => {
+  const date = new Date(event.dateEvent);
+  const dateDay   = date.toLocaleDateString('de-DE', {day: '2-digit'});
+  const dateMonth = date.toLocaleDateString('de-DE', {month: 'short'});
+  const dateYear  = date.toLocaleDateString('de-DE', {year: 'numeric'});
+  const _html = `
+    ${event.ticketsAdvancesaleInternet 
+      ? `<a class=event data-id=${event.id} href=${event.ticketsAdvancesaleInternet.replace(/^\uFEFF/gm, '')} target="_blank">`
+      : `<div class=event data-id=${event.id}>`
+    }
+    
+      <div class=date data-date=${event.dateEvent}>
+        <div class=day>${dateDay}</div>
+        <div class=month>${dateMonth}</div>
+        <!--<div class="month_year">
+          <div class=month>${dateMonth}</div>
+          <div class=year>${dateYear}</div>
+        </div> -->
+      </div>
+      <div class=description>
+        <div class=title>"${event.programName}" – ${event.locationCityName}</div>
+        <!--<div class=location>${event.locationCityName}</div>-->
+      </div>
+
+    ${event.ticketsAdvancesaleInternet 
+      ? `</a>`
+      : `</div>`
+    }
+
+  `
+  return _html;
+};
+
+const templateSchema = (event) => {
+  const schema = `
+  <script type="application/ld+json">
+    {
+      "@context":"http:\/\/www.schema.org",
+      "@type":"Event",
+      "name":"${event.programName}",
+      "url":"${event.ticketsAdvancesaleInternet}",
+      "description":"${event.programName}",
+      "startDate":"${event.dateEvent}",
+      "endDate":"${event.dateEvent}",
+      "location": {
+        "@type":"Place",
+        "name":"${event.locationName}",
+        "address":"${event.locationCityName}, ${event.locationStreetAddress}"
+      },
+      "performer": {
+        "@type":"Person",
+        "name":"${event.artistName}"
+      }
+    }                        
+  </script>`
+  return schema;
+};
+

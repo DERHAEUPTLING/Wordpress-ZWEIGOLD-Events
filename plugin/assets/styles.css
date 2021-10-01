@@ -1,0 +1,72 @@
+.sc_zweigold_eventlist {
+  font-family: roboto, 'arial narrow';
+  text-transform: uppercase;
+
+  border-top: 1px solid #e5e5e5;
+  border-right: 1px solid #e5e5e5;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.sc_zweigold_eventlist .event {
+  display: flex;
+  align-items: baseline;
+
+  width: 100%;
+  min-height: 63px;
+  position: relative;
+  padding: 15px 0 15px;
+
+  color: #808080;
+  background-color: #ffffff;
+  text-decoration: none;
+
+  transition: all 0.2s ease;
+
+  overflow: hidden;
+
+  border-color: #5d9ba8;
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-bottom: none;
+}
+.sc_zweigold_eventlist a.event:hover {
+  border-left-width: 7px;
+}
+
+.sc_zweigold_eventlist .event:after {
+  content: "";
+  width: 100%;
+  height: 1px;
+  background-color: #e5e5e5;
+  position: absolute;
+  bottom: 0;
+  display: block;
+}
+.sc_zweigold_eventlist .date {
+  display: flex;
+  flex-direction: column;
+  line-height: 110%;
+  color: #ababab;
+  padding: 0px 8px 2px 13px;
+  margin: 0 6px 0 0;
+}
+.sc_zweigold_eventlist .date .day {
+  font-size: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.sc_zweigold_eventlist .date .month {
+  font-size: 11px;
+}
+
+.sc_zweigold_eventlist .description {
+  transform: translateY(-2px);
+}
+.sc_zweigold_eventlist .title,
+.sc_zweigold_eventlist .location {
+  font-size: 22px;
+  font-weight: 700;
+  padding: 0 15px;
+  color: #6B6B6B;
+}
+
