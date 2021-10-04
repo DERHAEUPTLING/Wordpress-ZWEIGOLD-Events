@@ -37,7 +37,7 @@ const templateEvent = (event, i, jsonLength) => {
   const dateMonth = date.toLocaleDateString("de-DE", { month: "short" });
   const monthHeadline = date.toLocaleDateString("de-DE", { month: "long", year: "numeric" });
 
-  console.log("currentMonth, dateMonth, i: ", currentMonth, dateMonth, i);
+  // console.log("currentMonth, dateMonth, i: ", currentMonth, dateMonth, i);
 
   const eventlistContainerStart = () => {
     let _html = ``;
@@ -57,7 +57,6 @@ const templateEvent = (event, i, jsonLength) => {
 
   const eventlistContainerEnd = () => {
     if (i === jsonLength ) {
-      console.log("close ", i);
       return `</div>`;
     } else {
       return ``;
