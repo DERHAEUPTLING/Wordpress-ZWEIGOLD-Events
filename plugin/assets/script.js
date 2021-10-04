@@ -18,51 +18,53 @@ const loadData = (node) => {
 
 /* build event list */
 const buildList = (json, node) => {
+  const jsonLength = json.length;
   let eventList = "";
   let schemaList = "";
-  json.forEach(event => {
-    eventList += templateEvent(event) + templateSchema(event);
+
+  
+  json.forEach((event, i) => {
+    eventList += templateEvent(event, i, jsonLength);
   });
   node.innerHTML = eventList + schemaList;
 };
 
 /* Templates */
-
-const templateEvent = (event) => {
+let currentMonth = "";
+const templateEvent = (event, i, jsonLength) => {
   const date = new Date(event.dateEvent);
-  const dateDay   = date.toLocaleDateString('de-DE', {day: '2-digit'});
-  const dateMonth = date.toLocaleDateString('de-DE', {month: 'short'});
-  const dateYear  = date.toLocaleDateString('de-DE', {year: 'numeric'});
-  const _html = `
-    ${event.ticketsAdvancesaleInternet 
-      ? `<a class=event data-id=${event.id} href=${event.ticketsAdvancesaleInternet.replace(/^\uFEFF/gm, '')} target="_blank">`
-      : `<div class=event data-id=${event.id}>`
-    }
+  const dateDay = date.toLocaleDateString("de-DE", { day: "2-digit" });
+  const dateMonth = date.toLocaleDateString("de-DE", { month: "short" });
+  const monthHeadline = date.toLocaleDateString("de-DE", { month: "long", year: "numeric" });
+
+  console.log("currentMonth, dateMonth, i: ", currentMonth, dateMonth, i);
+
+  const eventlistContainerStart = () => {
+    let _html = ``;
     
-      <div class=date data-date=${event.dateEvent}>
-        <div class=day>${dateDay}</div>
-        <div class=month>${dateMonth}</div>
-        <!--<div class="month_year">
-          <div class=month>${dateMonth}</div>
-          <div class=year>${dateYear}</div>
-        </div> -->
-      </div>
-      <div class=description>
-        <div class=title>"${event.programName}" – ${event.locationCityName}</div>
-        <!--<div class=location>${event.locationCityName}</div>-->
-      </div>
-
-    ${event.ticketsAdvancesaleInternet 
-      ? `</a>`
-      : `</div>`
+    if (currentMonth != dateMonth && i != 0  ) { 
+      // close opended <div class="eventlist-container"> from prior loop
+      _html += `</div>`;
     }
+    if (currentMonth != dateMonth ) {
+        _html += `
+          <p class="sc_zweigold_eventlist_headline">${monthHeadline}</p>
+          <div class="sc_zweigold_eventlist_container">
+        `;
+    }
+    return _html;
+  };
 
-  `
-  return _html;
-};
+  const eventlistContainerEnd = () => {
+    if (i === jsonLength ) {
+      console.log("close ", i);
+      return `</div>`;
+    } else {
+      return ``;
+    }
+  };
 
-const templateSchema = (event) => {
-  const schema = `
+  const _schema = `
   <script type="application/ld+json">
     {
       "@context":"http:\/\/www.schema.org",
@@ -82,7 +84,34 @@ const templateSchema = (event) => {
         "name":"${event.artistName}"
       }
     }                        
-  </script>`
-  return schema;
-};
+  </script>`;
 
+  const _html = `
+    ${eventlistContainerStart()}
+      ${
+        event.ticketsAdvancesaleInternet
+          ? `<a class=event data-id=${event.id} href=${event.ticketsAdvancesaleInternet.replace(
+              /^\uFEFF/gm,
+              ""
+            )} target="_blank" rel="noopener">`
+          : `<div class=event data-id=${event.id}>`
+      }
+      
+        <div class=date data-date=${event.dateEvent}>
+          <div class=day>${dateDay}</div>
+          <div class=month>${dateMonth}</div>
+        </div>
+        <div class=description>
+          <div class=title>"${event.programName}" – ${event.locationCityName}</div>
+          <!--<div class=location>${event.locationCityName}</div>-->
+        </div>
+
+      ${event.ticketsAdvancesaleInternet ? `</a>` : `</div>`}
+      ${_schema}
+    ${eventlistContainerEnd()}
+  `;
+
+  currentMonth = dateMonth;
+
+  return _html;
+};
