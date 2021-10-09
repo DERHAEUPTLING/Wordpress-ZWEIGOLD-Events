@@ -38,6 +38,7 @@ const templateEvent = (event, i, jsonLength) => {
   const monthHeadline = date.toLocaleDateString("de-DE", { month: "long", year: "numeric" });
 
   // console.log("currentMonth, dateMonth, i: ", currentMonth, dateMonth, i);
+  console.log(event);
 
   const eventlistContainerStart = () => {
     let _html = ``;
@@ -68,7 +69,7 @@ const templateEvent = (event, i, jsonLength) => {
     {
       "@context":"http:\/\/www.schema.org",
       "@type":"Event",
-      "name":"${event.programName}",
+      "name":"${event.name ? event.name: event.programName}",
       "url":"${event.ticketsAdvancesaleInternet}",
       "description":"${event.programName}",
       "startDate":"${event.dateEvent}",
@@ -101,7 +102,7 @@ const templateEvent = (event, i, jsonLength) => {
           <div class=month>${dateMonth}</div>
         </div>
         <div class=description>
-          <div class=title>"${event.programName}" – ${event.locationCityName}</div>
+          <div class=title>"${event.name ? event.name: event.programName}" – ${event.locationCityName}</div>
           <!--<div class=location>${event.locationCityName}</div>-->
         </div>
 
