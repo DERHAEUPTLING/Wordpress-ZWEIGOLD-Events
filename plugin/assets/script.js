@@ -38,7 +38,7 @@ const templateEvent = (event, i, jsonLength) => {
   const monthHeadline = date.toLocaleDateString("de-DE", { month: "long", year: "numeric" });
 
   // console.log("currentMonth, dateMonth, i: ", currentMonth, dateMonth, i);
-  console.log(event);
+  // console.log(event);
 
   const eventlistContainerStart = () => {
     let _html = ``;
