@@ -102,7 +102,9 @@ const templateEvent = (event, i, jsonLength) => {
           <div class=month>${dateMonth}</div>
         </div>
         <div class=description>
-          <div class=title>${event.name ? event.name: event.programName} – ${event.locationCityName}</div>
+          <div class=title><span class="spanTitle">${event.name ? event.name: event.programName} – ${event.locationCityName}</span>
+            <span class="infoText"> ${event.infoText}</span>
+          </div>
           <!--<div class=location>${event.locationCityName}</div>-->
         </div>
 

@@ -87,3 +87,10 @@
   color: #6B6B6B;
 }
 
+.sc_zweigold_eventlist_container .title .spanTitle{
+  padding-right: 10px;
+}
+.sc_zweigold_eventlist_container .title .infoText {
+  color: red;
+}
+
